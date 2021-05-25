@@ -9,14 +9,14 @@ public class Percorso {
 	private double distanza;
 	private ArrayList<String> listaCittà;
 	private Paese lastPaese;
-	private String arrivo;
+	private int idArrivo;
 	
 	/**
 	 * costruttore per creare un percorso da 0
 	 * @param _arrivo
 	 */
-	public Percorso(String _arrivo) {
-		this.arrivo=_arrivo;
+	public Percorso(int _arrivo) {
+		this.idArrivo=_arrivo;
 		nCittà=0;
 		carburante=0;
 		listaCittà=new ArrayList<>();
@@ -31,11 +31,11 @@ public class Percorso {
 	 */
 	public Percorso(Percorso p)
 	{
-		nCittà=p.getnCittà();
-		carburante=p.getCarburante();
-		distanza=p.getCarburante();
-		arrivo=p.getArrivo();
-		listaCittà=(ArrayList<String>) p.getListaCittà().clone();
+		this.nCittà=p.getnCittà();
+		this.carburante=p.getCarburante();
+		this.distanza=p.getCarburante();
+		this.idArrivo=p.getIdArrivo();
+		this.listaCittà=(ArrayList<String>) p.getListaCittà().clone();
 	}
 	
 	public int getnCittà() {
@@ -54,11 +54,11 @@ public class Percorso {
 		return listaCittà;
 	}
 
-	public String getArrivo() {
-		return arrivo;
+
+	public int getIdArrivo() {
+		return idArrivo;
 	}
-	
-	
+
 /**
  * invocato per aggiungere le città al percorso
  * calcola distanza carburante ed aggiorna la lista della città
@@ -82,6 +82,7 @@ public class Percorso {
 		lastPaese=p;
 		
 		
+		
 	}
 	
 	/**
@@ -90,7 +91,7 @@ public class Percorso {
 	 * @param paese2
 	 * @return
 	 */
-	public double calcolaDist(Paese paese1,Paese paese2)
+	static public double calcolaDist(Paese paese1,Paese paese2)
 	{
 		Posizione p1=paese1.getPosizione();
 		Posizione p2=paese2.getPosizione();
