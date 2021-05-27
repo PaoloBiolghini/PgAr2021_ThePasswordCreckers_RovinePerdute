@@ -79,7 +79,7 @@ public class XMLObject {
 		output = "<?xml";
 		output += " version = \"" + this.XMLDeclarationVersion + "\"";
 		output += " encoding = \"" + this.XMLDeclarationEncoding + "\"";
-		output += "?>\n";
+		output += "?>";
 		for (String text : this.textBeforeRoot) {
 			output += text;
 		}

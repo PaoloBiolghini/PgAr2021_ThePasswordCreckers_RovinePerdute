@@ -133,6 +133,7 @@ public class XMLParser {
 					case XMLStreamConstants.START_DOCUMENT: //inizio del documento -> estrae la declaration
 						XMLDeclarationVersion = reader.getVersion();
 						XMLDeclarationEncoding = reader.getCharacterEncodingScheme();
+						textBeforeRoot.add("\n"); //Non so perché non prende la formattazione qui come CHARACTERS...
 						break;
 					
 					case XMLStreamConstants.START_ELEMENT: //inizio di un elemento -> è l'elemento radice, lo estrae
@@ -219,256 +220,58 @@ public class XMLParser {
 		return elemento;
 	}
 	
-	
-	
-	
-
-	
-	
-	
 	/**
-	 * Parsa tutte le persone presenti nel file XML inputPersone e le ritorna sotto forma di ArrayList di oggetti di tipo Persona.
-	 * @return un ArrayList di persone, ArrayList<Persona>.
-	 *
-	public static ArrayList<Persona> creaArrayListPersone() {
-		ArrayList<Persona> persone = new ArrayList<Persona>();
-		//int numeroDiPersone = 0;
-		
-		impostaReader("./xml/inputPersone.xml");
+	 * A partire da un oggetto di tipo XMLElement, scrive su file il codice XML dell'elemento che esso rappresenta.
+	 * @param element l'oggetto da tradurre in XML, XMLElement.
+	 */
+	private static void scriviElemento(XMLElement element) {
 		try {
-			GestoreXML.reader.next(); //salta lo START_DOCUMENT e va allo START_ELEMENT persone
-			//numeroDiPersone = Integer.parseInt(GestoreXML.reader.getAttributeValue(0));
-			GestoreXML.reader.next();//va al CHARACTER tra persone e persona
-			GestoreXML.reader.next(); //va allo START_ELEMENT della prima persona;
-			
-			do {
-				persone.add(estraiPersona());
+			if(element.getContent() == null) {
+				writer.writeEmptyElement(element.getTag()); //apertura del tag
 				
-				GestoreXML.reader.next(); // va al CHARACTER tra l'END_ELEMENT di questa persona e lo START_ELEMENT di una nuova persona.
-				GestoreXML.reader.next(); //va allo START_ELEMENT di una nuova persona oppure all'END_ELEMENT di persone, se arriviamo alla fine.
-			} while(GestoreXML.reader.getLocalName() != "persone");
-		
-		} catch (XMLStreamException e) {
-			System.out.println("Eccezione: ");
-			e.printStackTrace();
-		}
-		return persone;
-	}*/
-	
-	/**
-	 *Parsa tutti i codici fiscali presenti nel file XML codiciFiscali e li ritorna sotto forma di ArrayList di oggetti di tipo CodiceFiscale.
-	 * @return un ArrayList di codici fiscali, ArrayList<CodiceFiscale>.
-	 *
-	public static ArrayList<CodiceFiscale> estraiCF(){
-		ArrayList<CodiceFiscale> codici = new ArrayList<CodiceFiscale>();
-		int beforeElementType = 0;
-		String beforeElementName = "";
-		
-		try {
-			GestoreXML.impostaReader("./xml/codiciFiscali.xml");
-			
-			while(reader.getEventType() != XMLStreamConstants.CHARACTERS) {
-				beforeElementType = reader.getEventType();
-				if(reader.getEventType() == XMLStreamConstants.START_ELEMENT)
-					beforeElementName = reader.getLocalName();
-				
-					reader.next();
-			}//Arriva al primo campo CHARACTERS
-			
-			while(reader.hasNext()) {
-				
-				if(beforeElementType == XMLStreamConstants.START_ELEMENT && beforeElementName.equals("codice"))
-					codici.add(new CodiceFiscale(reader.getText()));
-				
-				beforeElementType = reader.getEventType();
-				if(reader.getEventType() == XMLStreamConstants.START_ELEMENT)
-					beforeElementName = reader.getLocalName();
-				reader.next();
-			}
-		} catch (XMLStreamException e) {
-			System.out.println("Eccezione: ");
-			e.printStackTrace();
-		}
-		return codici;
-	}
-	
-	/**
-	 * Dato il nome di un comune estrae il codice corrispondente dal file XML comuni.
-	 * @param comune, il nome del comune, String.
-	 * @return il codice associato al comune, String.
-	 *
-	public static String estraiCodiceComune(String comune) {
-		int beforeElementType = 0;
-		String beforeElementName = "";
-		
-		try {
-			GestoreXML.impostaReader("./xml/comuni.xml");
-			
-			while(reader.getEventType() != XMLStreamConstants.CHARACTERS) {
-				beforeElementType = reader.getEventType();
-				if(reader.getEventType() == XMLStreamConstants.START_ELEMENT)
-					beforeElementName = reader.getLocalName();
-				
-					reader.next();
-			}//Arriva al primo campo CHARACTERS
-			
-			while(reader.hasNext()) {
-				
-				if(beforeElementType == XMLStreamConstants.START_ELEMENT && beforeElementName.equals("nome")) {
-					if (reader.getText().equals(comune)) {
-						reader.next();
-						reader.next();
-						reader.next();
-						reader.next();
-						return reader.getText();
+				if (element.getAttributes() != null) { //scrittura attributi
+					for (String key : element.getOrderedAttributes()) {
+						writer.writeAttribute(key, element.getAttributes().get(key));
 					}
 				}
-				beforeElementType = reader.getEventType();
-				if(reader.getEventType() == XMLStreamConstants.START_ELEMENT)
-					beforeElementName = reader.getLocalName();
-				reader.next();
-			}
-		} catch (XMLStreamException e) {
-			System.out.println("Eccezione: ");
-			e.printStackTrace();
-		}
-		
-		return "NON TROVATO";
-	}
-	
-	/**
-	 * Controlla se il codice fornito corrisponde a quello di un comune.
-	 * @param codice il codice, String.
-	 * @return true se esiste un comune corrispondente, altrimenti false, boolean.
-	 *
-	public static boolean esistenzaCodiceComune(String codice) {
-		int beforeElementType = 0;
-		String beforeElementName = "";
-		
-		try {
-			GestoreXML.impostaReader("./xml/comuni.xml");
-			
-			while(reader.getEventType() != XMLStreamConstants.CHARACTERS) {
-				beforeElementType = reader.getEventType();
-				if(reader.getEventType() == XMLStreamConstants.START_ELEMENT)
-					beforeElementName = reader.getLocalName();
+			} else {
+				writer.writeStartElement(element.getTag()); //apertura del tag
 				
-					reader.next();
-			}//Arriva al primo campo CHARACTERS
-			
-			while(reader.hasNext()) {
+				if (element.getAttributes() != null) { //scrittura attributi
+					for (String key : element.getOrderedAttributes()) {
+						writer.writeAttribute(key, element.getAttributes().get(key));
+					}
+				}
 				
-				if(beforeElementType == XMLStreamConstants.START_ELEMENT && beforeElementName.equals("nome")) {
-					reader.next();
-					reader.next();
-					reader.next();
-					reader.next();
-					if (reader.getText().equals(codice))
-						return true;		
-				}
-				beforeElementType = reader.getEventType();
-				if(reader.getEventType() == XMLStreamConstants.START_ELEMENT)
-					beforeElementName = reader.getLocalName();
-				reader.next();
-			}
-		} catch (XMLStreamException e) {
-			System.out.println("Eccezione: ");
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * A partire da un oggetto di tipo CodiceFiscale genera il codice XML che descrive la persona ad esso associata.
-	 * @param cf il codice fiscale, it.unibs.arnaldo.geriatricpark.codicefiscale.CodiceFiscale
-	 * @param codiciEstratti i codici fiscali estratti dal file XML codiciFiscali, ArrayList<CodiceFiscale>
-	 */
-	
-	/**----------------------------------
-	
-	private static void scriviElemento(XMLElement element) {
-		
-		try {
-			writer.writeStartElement(element.getTag()); //apertura del tag
-			
-			if (element.getAttributes() != null) {//scrittura attributi
-				for (String key : element.getOrderedAttributes()) {
-					writer.writeAttribute(key, element.getAttributes().get(key));
-				}
-			}
-			
-			if (element.getContent() != null) {//scrittura contenuto
+				//scrittura contenuto
 				for (Object obj : element.getContent()) {
-					if (è stringa)
+					if (obj instanceof String) {
+						writer.writeCharacters((String)obj);
+					}
+					if (obj instanceof XMLElement) {
+						scriviElemento((XMLElement)obj);
+					}
 				}
+				
+				writer.writeEndElement(); //chiusura del tag
 			}
-			
-			
-			
-			
-			writer.writeStartElement("persona"); // scrittura del tag di apertura persona
-			writer.writeAttribute("id", Integer.toString(cf.getPersona().getId())); // inserisce l'attributo id
-			
-			writer.writeStartElement("nome"); // scrittura del tag di apertura nome
-			writer.writeCharacters(cf.getPersona().getNome()); // inserisce nome nel CHARACTERS
-			writer.writeEndElement(); // chiusura dell'ultimo tag aperto
-			
-			writer.writeStartElement("cognome"); // scrittura del tag di apertura cognome
-			writer.writeCharacters(cf.getPersona().getCognome()); // inserisce cognome nel CHARACTERS
-			writer.writeEndElement(); // chiusura dell'ultimo tag aperto
-			
-			writer.writeStartElement("sesso"); // e così via...
-			writer.writeCharacters(cf.getPersona().getSesso() + ""); 
-			writer.writeEndElement();
-			
-			writer.writeStartElement("comune_nascita");
-			writer.writeCharacters(cf.getPersona().getComuneDiNascita()); 
-			writer.writeEndElement();
-			
-			writer.writeStartElement("data_nascita");
-			writer.writeCharacters(Integer.toString(cf.getPersona().getAnnoDiNascita()) + "-" + Integer.toString(cf.getPersona().getMeseDiNascita()) + "-" +  Integer.toString(cf.getPersona().getGiornoDiNascita())); 
-			writer.writeEndElement();
-			
-			writer.writeStartElement("codice_fiscale");
-			
-			for(CodiceFiscale codiceEstratto : codiciEstratti) {
-				if(codiceEstratto.getValore().equals(cf.getValore())) {
-					presenteInElenco = true;
-					break;
-				}
-			}
-			
-			if(presenteInElenco)
-				writer.writeCharacters(cf.getValore()); 
-			else
-				writer.writeCharacters("ASSENTE"); 
-			
-			writer.writeEndElement();
-			
-			writer.writeEndElement(); //chiusura del tag persona
 			
 		} catch (Exception e) {
-			System.err.println("Eccezione: ");
-			}
-	}*/
+			System.err.println("Errore nella scrittura di un elemento XML: " + e.getMessage());
+			System.err.println();
+			e.printStackTrace();
+		}
+	}
 	
 	/**
-	 * Genera il documento XML codiciPersone e lo compila come richiesto.
-	 * @param codiciPersone i codici fiscali generati dal documento inputPersone, ArrayList<CodiceFiscale>
-	 * @param codiciEstratti i codici fiscali generati dal documento codiciFiscali, ArrayList<CodiceFiscale>
-	 * @param codiciInvalidi i codici fiscali generati dal documento codiciFiscali che risultano invalidi, ArrayList<CodiceFiscale>
-	 * @param codiciSpaiati i codici fiscali generati dal documento codiciFiscali che risultano spaiati rispetto a quelli generati
-	 * dal file inputPersone, ArrayList<CodiceFiscale>
+	 * A partire da un oggetto di tipo XMLObject genera un file XML nella directory specificata.
+	 * @param object l'oggetto di partenza, XMLObject.
+	 * @param percorsoFile il percorso del file XML da creare, String.
 	 */
-	
-	/**-----------------------------------------------------------------------
-	public static void scriviDocumento(XMLObject object) {
-		XMLElement rootElement = object.getRootElement();
-		
-		impostaWriter("./xml/output.xml");
-		
+	public static void scriviDocumento(XMLObject object, String percorsoFile) {
 		try {
+			impostaWriter(percorsoFile);
+			
 			writer.writeStartDocument(object.getXMLDeclarationEncoding(), object.getXMLDeclarationVersion());
 			
 			if (object.getTextBeforeRoot() != null) {
@@ -477,68 +280,34 @@ public class XMLParser {
 				}
 			}
 			
-			writer.writeStartElement(rootElement.getTag()); // apertura del tag radice
-			if (rootElement.getAttributes() != null) {
-				for (String key : rootElement.getOrderedAttributes()) {
-					writer.writeAttribute(key, rootElement.getAttributes().get(key));
+			if(object.getRootElement() != null) {
+				scriviElemento(object.getRootElement());
+			}
+			
+			if (object.getTextAfterRoot() != null) {
+				for (String text : object.getTextBeforeRoot()) {
+					writer.writeCharacters(text);
 				}
 			}
 			
-			
-			
-			
-			writer.writeStartElement("persone"); // apertura del tag persone
-			writer.writeAttribute("numero", Integer.toString(codiciPersone.size())); // inserisce l'attributo id
-			
-			for (CodiceFiscale codicePersona : codiciPersone)
-				scriviPersona(codicePersona, codiciEstratti);
-			
-			writer.writeEndElement(); // chiusura del tag persone
-			
-			
-			writer.writeStartElement("codici"); // apertura del tag codici
-			
-			writer.writeStartElement("invalidi"); // apertura del tag invalidi
-			writer.writeAttribute("numero", Integer.toString(codiciInvalidi.size())); // inserisce l'attributo numero
-			
-			for (CodiceFiscale cf : codiciInvalidi) {
-				writer.writeStartElement("codice");
-				writer.writeCharacters(cf.getValore());
-				writer.writeEndElement();
-			}
-			
-			writer.writeEndElement(); // chiusura del tag invalidi
-			
-			writer.writeStartElement("spaiati"); // apertura del tag spaiati
-			writer.writeAttribute("numero", Integer.toString(codiciSpaiati.size())); // inserisce l'attributo numero
-			
-			for (CodiceFiscale cf : codiciSpaiati) {
-				writer.writeStartElement("codice");
-				writer.writeCharacters(cf.getValore());
-				writer.writeEndElement();
-			}
-			
-			writer.writeEndElement(); // chiusura del tag spaiati
-			
-			writer.writeEndElement(); // chiusura del tag codici
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			writer.writeEndElement(); // chiusura del tag radice output
-			writer.writeEndDocument(); // apertura della fine del documento
+			writer.writeEndDocument(); // scrittura della fine del documento
 			writer.flush(); // svuota il buffer e procede alla scrittura
 			writer.close(); // chiusura del documento e delle risorse impiegate
-			} catch (Exception e) { // se c’è un errore viene eseguita questa parte
-			System.err.println("Errore nella scrittura del file XML!");
-			}
-	}*/
+			
+		} catch (Exception e) { // se c’è un errore viene eseguita questa parte
+			System.err.println("Errore nella scrittura del file XML: " + e.getMessage());
+			System.err.println();
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * A partire da un oggetto di tipo XMLObject genera il file XML "./xml/output.xml".
+	 * @param object l'oggetto di partenza, XMLObject.
+	 */
+	public static void scriviDocumento(XMLObject object) {
+		scriviDocumento(object, "./xml/output.xml");
+	}
 	
 }
 
