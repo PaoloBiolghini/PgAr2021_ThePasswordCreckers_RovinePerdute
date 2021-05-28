@@ -60,6 +60,7 @@ public class Main {
         	p.addNodo(listaNodi.get(findNext));
         	
         	nextNodo=findNext;
+        	System.out.println("Scelta"+nextNodo);
         }
         //graf1.stampa();
 /*
@@ -100,7 +101,8 @@ public class Main {
     	{
     		Nodo actualNodo=(Nodo)mapElement.getKey();
     		double costo=(double)mapElement.getValue();
-    		costo+=calcolaDist(nodoOra,fine);
+    		System.out.println("distanzeeee:"+calcolaDist(actualNodo,fine));
+    		costo+=calcolaDist(actualNodo,fine);
     		//controllo che non sia il primo inserimento
     		if(pos==-1)
     		{
@@ -114,6 +116,8 @@ public class Main {
         			pos=actualNodo.getId();
     			}
     		}
+    		
+    		System.out.println(actualNodo.getId()+" "+costo);
     	}
     	
     	return pos;
