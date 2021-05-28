@@ -12,14 +12,7 @@ public class Grafo {
         nodi=TraduttoreXMLObjectNodo.daXMLObjectANodi(XMLParser.estraiXMLObject(map));
     }
 
-    /**
-     * imposto i nodi del grafo con i loro vari collegamenti a partire dal oggetto XML creato durante la lettura del file
-     * @param mappa rappresenta il file XML da cui costruiremmo l'oggetto XML
-     * @return
-     */
-
-
-
+    
 
     /**
      * Setto i pesi dei collegamenti di ogni nodo
