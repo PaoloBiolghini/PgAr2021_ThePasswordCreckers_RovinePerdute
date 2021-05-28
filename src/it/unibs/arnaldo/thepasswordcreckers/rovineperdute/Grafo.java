@@ -6,6 +6,7 @@ import java.util.HashMap;
 public class Grafo {
     ArrayList<Nodo> nodi;
     private String map;
+    
     public Grafo(String _map){
         this.map=_map;
         nodi=TraduttoreXMLObjectNodo.daXMLObjectANodi(XMLParser.estraiXMLObject(map));
@@ -72,8 +73,14 @@ public class Grafo {
     }
 
  public void stampa(){
-nodi.stream().forEach(System.out::println);
+   nodi.stream().forEach(System.out::println);
 
  }
+
+public ArrayList<Nodo> getNodi() {
+	return nodi;
+}
+ 
+ 
 
 }
