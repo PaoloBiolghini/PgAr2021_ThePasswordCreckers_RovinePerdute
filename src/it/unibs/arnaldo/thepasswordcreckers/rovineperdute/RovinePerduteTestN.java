@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RovinePerduteTestN {
-
-
+    static String titolo="Rovine perdute";
+    static String[] voci={"Mappa da 5","Mappa da 12","Mappa da 50","Mappa da 200","Mappa da 2000","Mappa da 10000"};
 
     public static void main(String[] args) {
 
+MyMenu menu=new MyMenu(titolo,voci,false);
+menu.scegli();
 
 
         /*
