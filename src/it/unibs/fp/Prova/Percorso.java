@@ -98,8 +98,8 @@ public class Percorso {
 		
 		double xdis=Math.pow(p1.getX()-p2.getX(), 2);
 		double ydis=Math.pow(p1.getY()-p2.getY(), 2);;
-		//double zdis=Math.pow(p1.getZ()-p2.getZ(), 2);;
-		double dist=Math.sqrt(xdis+ydis);
+		double zdis=Math.pow(p1.getZ()-p2.getZ(), 2);;
+		double dist=Math.sqrt(xdis+ydis+zdis);
 		return dist;
 	}
 }
