@@ -99,17 +99,17 @@ public class XMLParser {
 	 * Ritorna l'ultimo reader creato.
 	 * @return il reader, XMLStreamReader.
 	 */
-	public static XMLStreamReader getReader() {
+	/*public static XMLStreamReader getReader() {
 		return reader;
-	}
+	}*/
 
 	/**
 	 * Ritorna l'ultimo writer creato.
 	 * @return il writer, XMLStreamWriter.
 	 */
-	public static XMLStreamWriter getWriter() {
+	/**public static XMLStreamWriter getWriter() {
 		return writer;
-	}
+	}*/
 	
 	/**
 	 * Crea un oggetto di tipo XMLObject parsando il contenuto di un file XML, in caso di errore ritorna null.

@@ -243,18 +243,18 @@ public class TraduttoreXMLObjectNodo {
 		//Route team 1
 		tagr = "route";
 		orderedAttributesr.add("team");
-		attributesr.put("team", /**/ "Toniathu");
+		attributesr.put("team", "Toniathu");
 		orderedAttributesr.add("cost");
-		attributesr.put("cost", /**/ "carburante_utilizzato");
+		attributesr.put("cost", /**/ String.format("%.2f", percorso1.getCostoTotale()));
 		orderedAttributesr.add("cities");
-		attributesr.put("cities", /**/ "numero_città_toccate");
+		attributesr.put("cities", /**/ Integer.toString(percorso1.getPercorso().size()));
 		
 		tagc = "city";
 		orderedAttributesc.add("id");
 		orderedAttributesc.add("name");
 		
 		
-		for (Nodo nodo : /**/percorso1.getRoute()) {
+		for (Nodo nodo : percorso1.getPercorso()) {
 			attributesc = new HashMap <String, String>();
 			attributesc.put("id", Integer.toString(/**/nodo.getId()));
 			attributesc.put("name", /**/nodo.getNome());
@@ -274,10 +274,10 @@ public class TraduttoreXMLObjectNodo {
 		
 		
 		attributesr.put("team", /**/ "Metztli");
-		attributesr.put("cost", /**/ "carburante_utilizzato2");
-		attributesr.put("cities", /**/ "numero_città_toccate2");
+		attributesr.put("cost", /**/ String.format("%.2f", percorso2.getCostoTotale()));
+		attributesr.put("cities", /**/ Integer.toString(percorso2.getPercorso().size()));
 		
-		for (Nodo nodo : /**/percorso2.getRoute()) {
+		for (Nodo nodo : /**/percorso2.getPercorso()) {
 			attributesc = new HashMap <String, String>();
 			attributesc.put("id", Integer.toString(/**/nodo.getId()));
 			attributesc.put("name", /**/nodo.getNome());
